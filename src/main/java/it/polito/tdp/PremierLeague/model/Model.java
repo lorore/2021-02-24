@@ -90,16 +90,16 @@ public class Model {
 		return dao.listAllMatches();
 	}
 	
-	public void avviaSimulazione(int N) {
+	public String avviaSimulazione(int N) {
 	 simulatore=new Simulator(N, this.m, this );
 		simulatore.init();
-		simulatore.sim();
+		return simulatore.sim();
 	}
 	
 	public int getSquadraGiocatoreMigliore(Player p) {
 		return this.dao.getSquadraGMigliore(p, m);
 	}
-	
+	/*
 	public int getGolCasa() {
 		return this.simulatore.golCasa();
 	}
@@ -114,7 +114,7 @@ public class Model {
 	
 	public int getEspulsiO() {
 		return this.simulatore.espulsiOspiti();
-	}
+	}*/
 	
 	
 }

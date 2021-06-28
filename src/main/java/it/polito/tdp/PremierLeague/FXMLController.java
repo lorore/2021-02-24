@@ -94,11 +94,12 @@ public class FXMLController {
     		return;
     	}
     	
-    	this.model.avviaSimulazione(N);
-    	int golCasa=this.model.getGolCasa();
+    	String result=this.model.avviaSimulazione(N);
+    	/*int golCasa=this.model.getGolCasa();
     	int golOspiti=this.model.getGolOspite();
     	this.txtResult.appendText("Risultato: "+golCasa+"-"+golOspiti+"\n");
-    	this.txtResult.appendText("Espulsi: "+this.model.getEspulsiCasa()+"-"+this.model.getEspulsiO());
+    	this.txtResult.appendText("Espulsi: "+this.model.getEspulsiCasa()+"-"+this.model.getEspulsiO());*/
+    	this.txtResult.appendText(result);
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

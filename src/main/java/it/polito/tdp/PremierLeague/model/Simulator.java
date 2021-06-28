@@ -32,7 +32,8 @@ public class Simulator {
 		
 	}
 	
-	public void sim() {
+	public String sim() {
+		String s=null;
 		for(int i=0; i<this.N; i++) {
 			double prob=Math.random()*100.0;
 			if(prob<=50.0) {
@@ -43,8 +44,6 @@ public class Simulator {
 				else if(this.nOspiti>this.nCasa)
 					this.golOspiti++;
 				else {
-					
-					
 					
 					if(this.squadraMigliore==this.m.getTeamHomeID())
 						this.golCasa++;
@@ -61,10 +60,15 @@ public class Simulator {
 					//espulso giocatore della squadra con giocatore migliore
 					
 					
-					if(this.squadraMigliore==this.m.getTeamHomeID())
-						this.nCasa--;
-					else
+					if(this.squadraMigliore==this.m.getTeamHomeID()) {
+						if(this.nCasa>0) 
+							this.nCasa--;
+					}
+					else {
+						if(this.nOspiti>0)
 						this.nOspiti--;
+					}
+						
 				}
 				else {
 					if(this.squadraMigliore!=this.m.getTeamHomeID())
@@ -91,10 +95,12 @@ public class Simulator {
 		
 		System.out.println(this.golCasa+"-"+this.golOspiti);
 		System.out.println((11-this.nCasa)+"-"+(11-this.nOspiti));
-		
+		s="Risultato: "+this.golCasa+"-"+this.golOspiti+"\n";
+		s+="Espulsi: "+(11-this.nCasa)+"-"+(11-this.nOspiti);
+		return s;
 		
 	}
-	
+	/*
 	public Integer golCasa() {
 		return this.golCasa();
 	}
@@ -111,7 +117,7 @@ public class Simulator {
 	public Integer espulsiOspiti() {
 		return (11-this.nOspiti);
 	}
-	
+	*/
 	
 
 }
