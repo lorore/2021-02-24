@@ -3,7 +3,25 @@ package it.polito.tdp.PremierLeague.model;
 public class Player {
 	Integer playerID;
 	String name;
+	Double e;
+	Integer team;
 	
+	public Integer getTeam() {
+		return team;
+	}
+
+	public void setTeam(Integer team) {
+		this.team = team;
+	}
+
+	public Double getE() {
+		return e;
+	}
+
+	public void setE(Double e) {
+		this.e = e;
+	}
+
 	public Player(Integer playerID, String name) {
 		super();
 		this.playerID = playerID;

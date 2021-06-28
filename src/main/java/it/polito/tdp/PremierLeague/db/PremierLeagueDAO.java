@@ -6,7 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import it.polito.tdp.PremierLeague.model.Action;
+import it.polito.tdp.PremierLeague.model.Adiacenza;
 import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Player;
 import it.polito.tdp.PremierLeague.model.Team;
@@ -108,6 +111,86 @@ public class PremierLeagueDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	public void getVertici(Map<Integer, Player> idMap, int m) {
+		String sql="SELECT * "
+				+ "FROM players p "
+				+ "WHERE p.PlayerID IN ( "
+				+ "SELECT a.PlayerID "
+				+ "FROM actions a "
+				+ "WHERE a.MatchID=?) ";
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, m);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				if(!idMap.containsKey(res.getInt("PlayerID"))) {
+					Player p=new Player(res.getInt("PlayerID"), res.getString("Name"));
+					idMap.put(p.getPlayerID(), p);
+				}
+			}
+			conn.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	public void setEfficienza(Map<Integer, Player> idMap, int m) {
+		String sql="SELECT a.PlayerID, a.TeamID,(a.TotalSuccessfulPassesAll+a.Assists)/a.TimePlayed as e "
+				+ "FROM actions a "
+				+ "WHERE a.MatchID=?";
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, m);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				if(idMap.containsKey(res.getInt("PlayerID"))) {
+					Player p=idMap.get(res.getInt("PlayerID"));
+					p.setE(res.getDouble("e"));
+					p.setTeam(res.getInt("TeamID"));
+				}
+			}
+			conn.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	public List<Adiacenza> getArchi(Map<Integer, Player> idMap, int m) {
+		String sql="SELECT a.PlayerID as p1, a.TeamID, a1.playerID as p2, ((a.TotalSuccessfulPassesAll+a.Assists)/a.TimePlayed)- ((a1.TotalSuccessfulPassesAll+a1.Assists)/a1.TimePlayed) AS peso "
+				+ "FROM actions a, actions a1 "
+				+ "WHERE a.MatchID=? AND a.PlayerID<>a1.PlayerID AND a.MatchID=a1.MatchID AND a.TeamID<>a1.TeamId ";
+		Connection conn = DBConnect.getConnection();
+		List<Adiacenza> result=new ArrayList<>();
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, m);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				if(idMap.containsKey(res.getInt("p1")) && idMap.containsKey(res.getInt("p2"))) {
+					Player p1=idMap.get(res.getInt("p1"));
+					Player p2=idMap.get(res.getInt("p2"));
+					Adiacenza a=new Adiacenza(p1, p2, res.getDouble("peso"));
+					if(a.getPeso()>=0)
+					result.add(a);
+					
+				}
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			throw new RuntimeException();
 		}
 	}
 	

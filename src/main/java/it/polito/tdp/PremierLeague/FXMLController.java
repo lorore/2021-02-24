@@ -6,8 +6,11 @@
 package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.PremierLeague.model.GiocatoreMigliore;
 import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
@@ -47,11 +50,30 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	this.txtResult.clear();
+    	Match m=this.cmbMatch.getValue();
+    	if(m==null) {
+    		this.txtResult.setText("Inserire un match!");
+    		return;
+    	}
+    	String res=this.model.creaGrafo(m.getMatchID());
+    	this.txtResult.appendText(res);
+    	this.btnGiocatoreMigliore.setDisable(false);
+    	this.btnSimula.setDisable(false);
     }
 
     @FXML
-    void doGiocatoreMigliore(ActionEvent event) {    	
+    void doGiocatoreMigliore(ActionEvent event) { 
+    	this.txtResult.clear();
+    	GiocatoreMigliore res=this.model.getGiocatoreMigliore();
+    	if(res==null) {
+    		this.txtResult.setText("Non c'è nessun giocatore migliore");
+    		return;
+    	}
+    	else {
+    		this.txtResult.setText(res.toString());
+    		return;
+    	}
     	
     }
     
@@ -73,5 +95,10 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.btnSimula.setDisable(true);
+    	List<Match> matches=this.model.getMatches();
+    	Collections.sort(matches);
+    	this.cmbMatch.getItems().addAll(matches);
+    	this.btnGiocatoreMigliore.setDisable(true);
     }
 }
