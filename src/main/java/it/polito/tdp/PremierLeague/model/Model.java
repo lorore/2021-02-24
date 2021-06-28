@@ -16,16 +16,18 @@ public class Model {
 	private Graph<Player, DefaultWeightedEdge> graph;
 	private PremierLeagueDAO dao;
 	private Map<Integer, Player> idMap;
+	private Match m;
 	
 	
 	public Model() {
 		dao=new PremierLeagueDAO();
 	}
 	
-	public String creaGrafo(int m) {
+	public String creaGrafo(Match m) {
+		this.m=m;
 		idMap=new HashMap<>();
 		graph=new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-		dao.getVertici(idMap, m);
+		dao.getVertici(idMap, m.getMatchID());
 		Graphs.addAllVertices(graph, idMap.values());
 		System.out.println(graph.vertexSet().size());
 		/*
@@ -44,7 +46,7 @@ public class Model {
 			}
 		}
 		*/
-		List<Adiacenza> archi=dao.getArchi(idMap, m);
+		List<Adiacenza> archi=dao.getArchi(idMap, m.getMatchID());
 		for(Adiacenza a: archi) {
 			Player p1=a.getP1();
 			Player p2=a.getP2();
@@ -86,6 +88,18 @@ public class Model {
 	public List<Match> getMatches(){
 		return dao.listAllMatches();
 	}
+	
+	public void avviaSimulazione(int N) {
+		Simulator simulatore=new Simulator(N, this.m, this );
+		simulatore.init();
+		simulatore.sim();
+	}
+	
+	public int getSquadraGiocatoreMigliore(Player p) {
+		return this.dao.getSquadraGMigliore(p, m);
+	}
+	
+	
 	
 	
 }

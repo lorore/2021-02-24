@@ -56,7 +56,7 @@ public class FXMLController {
     		this.txtResult.setText("Inserire un match!");
     		return;
     	}
-    	String res=this.model.creaGrafo(m.getMatchID());
+    	String res=this.model.creaGrafo(m);
     	this.txtResult.appendText(res);
     	this.btnGiocatoreMigliore.setDisable(false);
     	this.btnSimula.setDisable(false);
@@ -79,7 +79,7 @@ public class FXMLController {
     
     @FXML
     void doSimula(ActionEvent event) {
-
+    	this.model.avviaSimulazione(5);
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

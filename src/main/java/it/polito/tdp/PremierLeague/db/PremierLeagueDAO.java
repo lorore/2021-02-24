@@ -113,6 +113,8 @@ public class PremierLeagueDAO {
 			return null;
 		}
 	}
+	
+	
 	public void getVertici(Map<Integer, Player> idMap, int m) {
 		String sql="SELECT * "
 				+ "FROM players p "
@@ -192,6 +194,32 @@ public class PremierLeagueDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException();
 		}
+	}
+	
+	public Integer getSquadraGMigliore(Player p, Match m) {
+		String sql="SELECT a.TeamID "
+				+ "FROM actions a "
+				+ "WHERE a.MatchID=? AND a.PlayerID=?";
+		
+		Connection conn = DBConnect.getConnection();
+		Integer result=null;
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, m.getMatchID());
+			st.setInt(2, p.getPlayerID());
+			ResultSet res = st.executeQuery();
+			
+			while (res.next()) {
+				result=res.getInt("TeamID");
+				
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			throw new RuntimeException();
+		}
+		
 	}
 	
 }
