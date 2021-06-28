@@ -79,7 +79,26 @@ public class FXMLController {
     
     @FXML
     void doSimula(ActionEvent event) {
-    	this.model.avviaSimulazione(5);
+    	this.txtResult.clear();
+    	String n=this.txtN.getText().trim();
+    	if(n.isBlank()) {
+    		this.txtResult.setText("Nessun n inserito");
+    		return;
+    	}
+    	
+    	Integer N;
+    	try {
+    		N=Integer.parseInt(n);
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Quello inserito non è un numero!");
+    		return;
+    	}
+    	
+    	this.model.avviaSimulazione(N);
+    	int golCasa=this.model.getGolCasa();
+    	int golOspiti=this.model.getGolOspite();
+    	this.txtResult.appendText("Risultato: "+golCasa+"-"+golOspiti+"\n");
+    	this.txtResult.appendText("Espulsi: "+this.model.getEspulsiCasa()+"-"+this.model.getEspulsiO());
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

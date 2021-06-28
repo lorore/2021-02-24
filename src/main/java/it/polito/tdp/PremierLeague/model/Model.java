@@ -17,6 +17,7 @@ public class Model {
 	private PremierLeagueDAO dao;
 	private Map<Integer, Player> idMap;
 	private Match m;
+	private Simulator simulatore;
 	
 	
 	public Model() {
@@ -90,7 +91,7 @@ public class Model {
 	}
 	
 	public void avviaSimulazione(int N) {
-		Simulator simulatore=new Simulator(N, this.m, this );
+	 simulatore=new Simulator(N, this.m, this );
 		simulatore.init();
 		simulatore.sim();
 	}
@@ -99,7 +100,21 @@ public class Model {
 		return this.dao.getSquadraGMigliore(p, m);
 	}
 	
+	public int getGolCasa() {
+		return this.simulatore.golCasa();
+	}
 	
+	public int getGolOspite() {
+		return this.simulatore.golOspite();
+	}
+	
+	public int getEspulsiCasa() {
+		return this.simulatore.espulsiCasa();
+	}
+	
+	public int getEspulsiO() {
+		return this.simulatore.espulsiOspiti();
+	}
 	
 	
 }
